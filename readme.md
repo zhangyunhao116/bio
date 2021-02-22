@@ -8,7 +8,7 @@
 
 FixedReadAll reads from r into a preallocated slice until an error or EOF.
 
-About 30% faster than `io.ReadAll`, save 80% memory compared to `io.ReadAll`.
+About 30% faster and save 80% memory compared to `io.ReadAll`.
 
 ```
 name                          time/op
