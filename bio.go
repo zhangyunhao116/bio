@@ -3,6 +3,8 @@ package bio
 
 import (
 	"io"
+
+	"github.com/zhangyunhao116/bio/internal/xio"
 )
 
 // FixedReadAll reads from r into a preallocated slice until an error or EOF.
@@ -11,7 +13,7 @@ import (
 // Even if the actual data amount exceeds the size, this function still read all data from r.
 func FixedReadAll(r io.Reader, size int, limit int) ([]byte, error) {
 	if size <= 0 || (limit > 0 && size > limit) {
-		return io.ReadAll(r)
+		return xio.ReadAll(r)
 	}
 	data := make([]byte, size+1)
 
@@ -29,7 +31,7 @@ func FixedReadAll(r io.Reader, size int, limit int) ([]byte, error) {
 		}
 		i += n
 		if i == size+1 { // actual data amount exceeds the size
-			rest, err := io.ReadAll(r)
+			rest, err := xio.ReadAll(r)
 			res := make([]byte, len(data)+len(rest))
 			copy(res[:len(data)], data)
 			copy(res[len(data):], rest)

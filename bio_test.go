@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io"
 	"testing"
+
+	"github.com/zhangyunhao116/bio/internal/xio"
 )
 
 type mockReader struct {
@@ -56,7 +58,7 @@ func bytesEqual(b1 []byte, b2 []byte) bool {
 func TestAll(t *testing.T) {
 	const length = 1000
 
-	d2, err := io.ReadAll(newMockReader(length, 1))
+	d2, err := xio.ReadAll(newMockReader(length, 1))
 	if err != nil {
 		t.Fatalf("%s", err)
 	}
@@ -86,7 +88,7 @@ func BenchmarkAll(b *testing.B) {
 		})
 		b.Run(fmt.Sprintf("io.ReadAll-   %d MB", length/MB), func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
-				io.ReadAll(newMockReader(length, 100)) //nolint:errcheck
+				xio.ReadAll(newMockReader(length, 100)) //nolint:errcheck
 			}
 			b.ReportAllocs()
 		})
