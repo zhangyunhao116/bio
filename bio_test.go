@@ -64,8 +64,8 @@ func TestAll(t *testing.T) {
 	}
 
 	// All limit and size.
-	for _, limit := range []int{-100, -1, 0, 1, 32, length - 1, length, length + 1, length + 1024} {
-		for _, size := range []int{-100, -1, 0, 1, 32, length - 1, length, length + 1, length + 1024} {
+	for _, limit := range []int64{-100, -1, 0, 1, 32, length - 1, length, length + 1, length + 1024} {
+		for _, size := range []int64{-100, -1, 0, 1, 32, length - 1, length, length + 1, length + 1024} {
 			d1, err := FixedReadAll(newMockReader(length, 1), size, limit)
 			if err != nil {
 				t.Fatalf("%s", err)
@@ -82,7 +82,7 @@ func BenchmarkAll(b *testing.B) {
 	for _, length := range []int{1 * MB, 5 * MB, 10 * MB, 100 * MB, 1024 * MB} {
 		b.Run(fmt.Sprintf("FixedReadAll- %d MB", length/MB), func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
-				FixedReadAll(newMockReader(length, 100), length, -1) //nolint:errcheck
+				FixedReadAll(newMockReader(length, 100), int64(length), -1) //nolint:errcheck
 			}
 			b.ReportAllocs()
 		})

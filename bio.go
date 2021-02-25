@@ -11,7 +11,7 @@ import (
 // If size <= 0 or size > limit, return io.ReadAll(r) directly.
 // If limit <= 0 means the preallocated slice is unlimited.
 // Even if the actual data amount exceeds the size, this function still read all data from r.
-func FixedReadAll(r io.Reader, size int, limit int) ([]byte, error) {
+func FixedReadAll(r io.Reader, size int64, limit int64) ([]byte, error) {
 	if size <= 0 || (limit > 0 && size > limit) {
 		return xio.ReadAll(r)
 	}
@@ -23,14 +23,14 @@ func FixedReadAll(r io.Reader, size int, limit int) ([]byte, error) {
 		if n < 0 {
 			panic("reader returned negative count from Read")
 		}
+		i += n
 		if err == io.EOF { // err is EOF, so return nil explicitly
-			i += n
 			break
 		} else if err != nil {
-			return data, err
+			return data[:i], err
 		}
-		i += n
-		if i == size+1 { // actual data amount exceeds the size
+
+		if int64(i) == size+1 { // actual data amount exceeds the size
 			rest, err := xio.ReadAll(r)
 			res := make([]byte, len(data)+len(rest))
 			copy(res[:len(data)], data)
